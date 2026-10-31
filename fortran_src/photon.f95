@@ -164,7 +164,8 @@ end subroutine MovePhoton
 !=============================
 subroutine make_pairs(photon_gamma, electron, positron)
    use Particles, only: particle, duetoCMB
-   use Constantes, only: prec, NbPairsProd, NbLeptonsProd, currentEnergy, Tcmbp
+   use Constantes, only: prec, NbPairsProd, NbLeptonsProd, currentEnergy, Tcmbp, maxEnerEBL
+   use, intrinsic :: iso_fortran_env, only: error_unit
    implicit none
    type (particle), intent(inout) :: photon_gamma, electron, positron
    real (prec) :: Emin, hnu1, hnu2, cosTheta, ktr
@@ -192,7 +193,25 @@ subroutine make_pairs(photon_gamma, electron, positron)
    !$OMP ATOMIC
    nbPairsprod= nbpairsprod +1
    ! Compute the threshold of reaction if angle between photons is pi
-   hnu1=photon_gamma%energy 
+   hnu1=photon_gamma%energy
+
+   ! No EBL target can pass the head-on threshold in this state. Equality
+   ! also has zero pair-production cross section. Stop instead of sampling
+   ! forever; do not discard the photon or invent a different interaction.
+   if (.not. duetoCMB) then
+      if (hnu1*maxEnerEBL <= 1._prec) then
+         write(error_unit,'(a)') 'CECsi: impossible EBL pair-production sampling state'
+         write(error_unit,'(a,es24.16)') '  photon energy [m_e c^2] = ', hnu1
+         write(error_unit,'(a,es24.16)') '  redshift = ', photon_gamma%redshift
+         write(error_unit,'(a,i0)') '  generation = ', photon_gamma%generation
+         write(error_unit,'(a,es24.16)') '  maximum EBL energy [m_e c^2] = ', maxEnerEBL
+         if (hnu1 > 0._prec) then
+            write(error_unit,'(a,es24.16)') '  minimum target energy [m_e c^2] = ', 1._prec/hnu1
+         end if
+         flush(error_unit)
+         error stop 1
+      end if
+   end if
 
    do while (rejection)
       Emin = 1 / hnu1
