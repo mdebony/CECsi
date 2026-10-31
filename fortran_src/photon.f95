@@ -8,18 +8,19 @@ implicit none
                                    CONTAINS
 !===============================================================================         
 subroutine Check_if_photon_interact(photon, Zfinal)
-   use Constantes, ONLY : c, H0, prec, pi, r0, m, hb, omegaM, omegaL, distSourceToEarth
+   use Constantes, ONLY : c, H0, prec, pi, r0, m, hb, omegaM, omegaL, distSourceToEarth, &
+                          maxEnerEBL
    use Particles, only: particle, dueToCMB, willInteract
    implicit none
    type (particle), intent(in) :: photon
    type (particle) :: photon_modify
    real(prec), intent(out) :: Zfinal
    real(prec) :: distToSource,zint,redzmax,redzmin, comp, Zlim
-   real(prec) :: Norma, tau, qgauss, ProbaInt, ProbaLim, ran0
+   real(prec) :: Norma, tau, qgauss, ProbaInt, ProbaLim, ran0, pair_opacity_integral
    real(prec) :: aa, bb, dtaudx, deltaZ,integranddtaudxPP
    real(prec) :: dtaudxPPCMB,dtaudxPPEBL,integrandTauPP,PCMB!,PEBL
    real(prec) :: integranddtaudxPPCMB,integranddtaudxPPEBL, qgauss1
-   external qgauss,qgauss1,integrandTauPP, ran0
+   external qgauss,qgauss1,integrandTauPP, ran0, pair_opacity_integral
    external integranddtaudxPPCMB,integranddtaudxPPEBL,integranddtaudxPP
 
    tau=0
@@ -66,7 +67,7 @@ subroutine Check_if_photon_interact(photon, Zfinal)
    ! we assume that the photon will not interact, otherwise we compute the
    ! redshift of interaction.
    Norma = (c/H0)*pi*(r0**2)*(m*c/hb)**3
-   tau = qgauss(integrandTauPP, Zlim, photon%redshift)
+   tau = pair_opacity_integral(Zlim,photon%redshift)
    tau = tau * Norma
 #ifdef approx_lambda_gg
    if (tau < 1) then ! No interaction before reaching the limit
@@ -91,7 +92,7 @@ subroutine Check_if_photon_interact(photon, Zfinal)
       redzmin = Zlim
 
       aa = log(1/photon%energy)
-      bb = log(max(2.402285564062D-5,1/photon%energy))
+      bb = log(max(maxEnerEBL,1/photon%energy))
       
       dtaudx=qgauss1(integranddtaudxPP, aa, bb, photon%redshift)
       deltaZ=comp*Norma*((1+photon%redshift)*sqrt((omegaM*((1.+photon%redshift)**3)+omegaL)))/(dtaudx/(photon%energy**2))
@@ -101,7 +102,7 @@ subroutine Check_if_photon_interact(photon, Zfinal)
       else ! we use dichotomy
          do while(abs(tau+comp)  > (1.d-8)*abs(comp))
             zint = (redzmin+redzmax)/2
-            tau = qgauss(integrandTauPP, zint, photon%redshift)
+            tau = pair_opacity_integral(zint,photon%redshift)
             tau = tau*Norma 
             if (redzmax == zint .or. redzmin == zint) then
                tau = -comp
@@ -119,7 +120,7 @@ subroutine Check_if_photon_interact(photon, Zfinal)
       ! Important to compute the pair production (globale variable: logical duetoCMB)
       photon_modify%energy=photon%energy*(1+Zfinal)/(1+photon%redshift)
       aa = log(1/photon_modify%energy)
-      bb = log(max(2.402285564062D-5,1/photon_modify%energy))
+      bb = log(max(maxEnerEBL,1/photon_modify%energy))
       if (aa==bb) then
          duetoCMB= .FALSE.
       else

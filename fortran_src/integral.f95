@@ -254,8 +254,26 @@ real(prec) function integranddtaudxPPEBL (y,redzz)
    return
 end function integranddtaudxPPEBL
 
+! Integrate the existing pair-production rate only where its energy interval
+! is nonempty. Use the loaded EBL maximum consistently with target sampling.
+real(prec) function pair_opacity_integral(z_lower, z_upper) result(value)
+   use Constantes, only : prec, currentEnergy, currentRedshift, maxEnerEBL
+   implicit none
+   real(prec), intent(in) :: z_lower, z_upper
+   real(prec) :: z_cut, lower, qgauss, integrandTauPP
+   external :: qgauss, integrandTauPP
+
+   z_cut = (1._prec+currentRedshift)/(currentEnergy*maxEnerEBL)-1._prec
+   lower = max(z_lower,z_cut)
+   if (lower >= z_upper) then
+      value = 0._prec
+   else
+      value = qgauss(integrandTauPP,lower,z_upper)
+   end if
+end function pair_opacity_integral
+
 real(prec) function integrandTauPP (reddz)
-   use Constantes, only : prec, omegaM, omegaK, omegaL, currentEnergy, currentRedshift
+   use Constantes, only : prec, omegaM, omegaK, omegaL, currentEnergy, currentRedshift, maxEnerEBL
    implicit none
    real(prec) qgauss1
    external qgauss1 
@@ -267,7 +285,7 @@ real(prec) function integrandTauPP (reddz)
    !redz = borne sup, reddz = variable 
    Egammaa=currentEnergy*(1+reddz)/(1+currentRedshift) 
    aa=log(1/Egammaa) 
-   bb=log(max(2.402285564062D-5,1/Egammaa))
+   bb=log(max(maxEnerEBL,1/Egammaa))
 
    if (aa==bb) then
       dtaudxPP=0

@@ -59,8 +59,8 @@ subroutine Compute_Ecut(zi)
    integer :: j, k, Ne=50000
    real(prec) :: Ej, Esave, tau, redzmin, redzmax, disttosource, zint, zlim, norma
    real(prec) :: dist, zearth=0, Emin, Emax
-   real(prec) :: qgauss, integrandTauPP, integrandR, integrandt
-   external qgauss, integrandTauPP, integrandR, integrandt
+   real(prec) :: qgauss, pair_opacity_integral, integrandR, integrandt
+   external qgauss, pair_opacity_integral, integrandR, integrandt
 
    dist = (c/H0)*qgauss(integrandR, zEarth, zi)
 
@@ -99,7 +99,7 @@ subroutine Compute_Ecut(zi)
       Zlim = zint
 
       Norma = (c/H0)*pi*(r0**2)*(m*c/hb)**3
-      tau = qgauss(integrandTauPP, Zlim, part%redshift)
+      tau = pair_opacity_integral(Zlim, part%redshift)
       tau = tau * Norma
       if (tau < 1) then ! No interaction before reaching the limit
          Esave=currentEnergy

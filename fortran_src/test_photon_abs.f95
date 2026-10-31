@@ -50,7 +50,7 @@ call finish()
                                    CONTAINS
 !===============================================================================
 subroutine gamma_absorption(i)
-   use Constantes, only : c, H0, prec, pi, r0, m, hb, omegaM, omegaL, Mpc
+   use Constantes, only : c, H0, prec, pi, r0, m, hb, omegaM, omegaL, Mpc, maxEnerEBL
    use Particles, only : particle, initiate_source_particle, charge, Emin_source, Emax_source
    use photon_routines, only: movephoton
    implicit none
@@ -59,8 +59,8 @@ subroutine gamma_absorption(i)
    real(prec) :: Esave, tau, redzmin, redzmax, disttosource, zint, zlim, norma
    real(prec) :: dist, aa, bb, comp, deltaz, dtaudx, zfinal, zearth=0, Emin, Eebl 
    real(prec) :: dtaudxCMB, dtaudxEBL, integranddtaudxPPCMB, integranddtaudxPPEBL
-   real(prec) :: qgauss, qgauss1, integranddtaudxPP, integrandTauPP, integrandt
-   external qgauss, qgauss1, integranddtaudxPP, integrandTauPP, integrandt
+   real(prec) :: qgauss, qgauss1, integranddtaudxPP, pair_opacity_integral, integrandt
+   external qgauss, qgauss1, integranddtaudxPP, pair_opacity_integral, integrandt
 
    call initiate_source_particle(part)
    part%energy = Emin_source* 10**(i*log10(Emax_source/Emin_source)/Nmax)
@@ -71,7 +71,7 @@ subroutine gamma_absorption(i)
    redzmax = part%redshift
    redzmin = -1 ! horizon
    aa = log(1/part%energy)
-   bb = log(max(2.402285564062D-5,1/part%energy))
+   bb = log(max(maxEnerEBL,1/part%energy))
    comp = -1
 
    Norma = (c/H0)*pi*(r0**2)*(m*c/hb)**3
@@ -85,7 +85,7 @@ subroutine gamma_absorption(i)
    else ! we use dichotomy
       do while(abs(tau+comp)  > (1.d-8)*abs(comp))
          zint = (redzmin+redzmax)/2
-         tau = qgauss(integrandTauPP, zint, currentredshift)
+         tau = pair_opacity_integral(zint, currentRedshift)
          tau = tau*Norma
          if (redzmax == zint .or. redzmin == zint) then
             tau = -comp
