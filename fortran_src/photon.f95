@@ -169,7 +169,7 @@ subroutine make_pairs(photon_gamma, electron, positron)
    use, intrinsic :: iso_fortran_env, only: error_unit
    implicit none
    type (particle), intent(inout) :: photon_gamma, electron, positron
-   real (prec) :: Emin, hnu1, hnu2, cosTheta, ktr
+   real (prec) :: Emin, hnu1, hnu2, cosTheta, cosThetaMax, ktr
    real (prec) :: gama, beta, betaSquare
    real (prec) :: Xsection, randomXsection, ran0
    real (prec) :: dirPhotonLowEnergy(3)
@@ -214,6 +214,10 @@ subroutine make_pairs(photon_gamma, electron, positron)
       end if
    end if
 
+   ! Fixed widest cone: independent of the sampled target energy.
+   cosThetaMax=1._prec
+   if (.not. duetoCMB) cosThetaMax=1._prec-2._prec/(hnu1*maxEnerEBL)
+
    do while (rejection)
       Emin = 1 / hnu1
       hnu2=0
@@ -231,12 +235,16 @@ subroutine make_pairs(photon_gamma, electron, positron)
                call genx(hnu2,emin,photon_gamma%redshift)
             end if 
          else
-            call selecPhotEBL(hnu2,photon_gamma%redshift)
+            call selecPhotEBL(hnu2,photon_gamma%redshift,1._prec/hnu1)
          end if
          ! select an angle accordig to the isotropic distribution
          costheta = 1
          do while (costheta==1)
+            if (duetoCMB) then
             call isotrop(dirPhotonLowEnergy(1), dirPhotonLowEnergy(2),dirPhotonLowEnergy(3))
+            else
+               call isotropCone(photon_gamma%dir,cosThetaMax,dirPhotonLowEnergy)
+            end if
             ! cosTheta = cos (angle between photons)
             cosTheta = photon_gamma%dir(1)*dirPhotonLowEnergy(1) + & 
                        photon_gamma%dir(2)*dirPhotonLowEnergy(2) + &

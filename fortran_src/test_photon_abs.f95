@@ -107,7 +107,7 @@ subroutine gamma_absorption(i)
    !! Select target photon: must have an energy higher than the threshold
    !! previously computed
    !do while (Eebl < Emin)
-   !   call selecPhotEBL(Eebl,currentRedshift)
+   !   call selecPhotEBL(Eebl,currentRedshift,minEnerEBL)
    !end do
 
    !tau = qgauss(integrandTauPP, zearth, zfinal)*Norma*(c/H0)

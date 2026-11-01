@@ -68,7 +68,7 @@ call finish()
                                    CONTAINS
 !===============================================================================
 subroutine test_CMB_EBL_in_IC()
-   use constantes, only : currentEnergy, currentRedshift, H0,c,Mpc
+   use constantes, only : currentEnergy, currentRedshift, H0,c,Mpc, minEnerEBL
    use particles, only: charge, particle, duetoCMB, initiate_source_particle
    use Lepton_Routines, only : check_if_lepton_interact
    use test, only: nh,e,eh,hist,dens,x,dx,emin,emax
@@ -89,7 +89,7 @@ subroutine test_CMB_EBL_in_IC()
       if (duetoCMB) then
          call selecPhotCMB(e2,currentRedshift)
       else
-         call selecPhotEBL(e2,currentRedshift)
+         call selecPhotEBL(e2,currentRedshift,minEnerEBL)
       end if
       !$OMP CRITICAL (test)
       if ( .not. duetoCMB ) then

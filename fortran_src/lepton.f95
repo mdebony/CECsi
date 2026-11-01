@@ -333,7 +333,7 @@ subroutine isophotcompton(e1,u1,v1,w1,ep,up,vp,wp,zint)
 ! interaction is then simulated by a call to subroutine compton
 
 ! note: all ref change in this routine and its kids have not been rechecked
-   use Constantes, only :  pi, prec
+   use Constantes, only : pi, prec, minEnerEBL
    use particles, only : particle, duetoCMB
    implicit none
    real(prec) :: e1,u1,v1,w1
@@ -359,7 +359,7 @@ subroutine isophotcompton(e1,u1,v1,w1,ep,up,vp,wp,zint)
          call selecphotCMB(e2,zint)
          !! BB truncated at low energy (to check)
       else  ! si le Compton est du à l'EBL
-        call selecphotEBL(e2,zint)
+        call selecphotEBL(e2,zint,minEnerEBL)
       end if
           
       yt=yu(e1,e2)

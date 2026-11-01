@@ -45,19 +45,44 @@ subroutine isotrop(u,v,w)
    v=sqrt(1.-w*w)*sin(2.*pi*a2)
 end subroutine isotrop
 
+! Isotropic direction inside a fixed cone about the opposite of axis.
+subroutine isotropCone(axis,cosMax,direction)
+   use Constantes, only : prec, pi
+   implicit none
+   real(prec), intent(in) :: axis(3), cosMax
+   real(prec), intent(out) :: direction(3)
+   real(prec) :: unitAxis(3), tangent(3), other(3), mu, phi, ran0
+   external :: ran0
+
+   unitAxis=axis
+   call renorme(unitAxis(1),unitAxis(2),unitAxis(3))
+   tangent=(/unitAxis(3),0._prec,-unitAxis(1)/)
+   if (abs(unitAxis(3)) < 0.9_prec) tangent=(/-unitAxis(2),unitAxis(1),0._prec/)
+   call renorme(tangent(1),tangent(2),tangent(3))
+   call pdtVect(unitAxis,tangent,other)
+
+   mu=-1._prec+(1._prec+cosMax)*ran0()
+   phi=2._prec*pi*ran0()
+   direction=mu*unitAxis+sqrt(max(0._prec,1._prec-mu*mu))* &
+             (cos(phi)*tangent+sin(phi)*other)
+end subroutine isotropCone
+
 !------------------------------------------------------------------------------ 
-! Draw a photon from the EBL
+! Draw an EBL photon above emin; pass minEnerEBL for the full spectrum.
 !------------------------------------------------------------------------------
-subroutine selecPhotEBL(ee,zint)
+subroutine selecPhotEBL(ee,zint,emin)
    use Constantes, only : prec, enerEBL, maxenerEBL, minenerEBL
    implicit none
-   external NeInterpol 
-   real(prec), intent(in):: zint
+   external NeInterpol
+   real(prec), intent(in):: zint, emin
    real(prec), intent(out):: ee
-   real(prec) :: a1,a2,ran0,maxEBL,Ne,NN
+   real(prec) :: a1,a2,ran0,maxEBL,Ne,NN,lower
    real(prec), dimension(:), allocatable :: nEBLinter
    logical :: reject
    integer :: i
+
+   lower=max(emin,minEnerEBL)
+   if (lower >= maxEnerEBL) error stop 'Empty EBL target energy interval'
 
    ! Compute the "curve" of the EBL density vs energy for our specific redshift
    ! which is most probably not tabulated
@@ -70,13 +95,14 @@ subroutine selecPhotEBL(ee,zint)
    ! extraction of the min, max values
    maxEBL=maxval(enerEBL*nEBLinter)
    deallocate(nEBLinter)
+   if (maxEBL <= 0) error stop 'Empty EBL target photon density'
 
    ! Rejection on the EBL values
    reject=.TRUE.
    do while (reject)
       a1=ran0()
       a2=ran0()
-      ee=log(minEnerEBL)+a1*(log(maxEnerEBL/minEnerEBL))
+      ee=log(lower)+a1*(log(maxEnerEBL/lower))
       NN=a2*(maxEBL)
       Call NeInterpol(exp(ee),zint,Ne)
       if (NN<Ne*exp(ee)) then
