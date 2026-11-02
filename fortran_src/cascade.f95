@@ -314,9 +314,9 @@ subroutine finish()
 
    write(*,*) ""
    write(*,*) "=================================================================="
-   write(*,'(a,i8)') "  > Inverse Compton scattering computed:",nbCompton
-   write(*,'(a,i8)') "  > Pairs production computed:          ",nbPairsprod
-   write(*,'(a,i8)') "  > Number of leptons generated:        ",nbLeptonsProd
+   write(*,'(a,i0)') "  > Inverse Compton scattering computed:",nbCompton
+   write(*,'(a,i0)') "  > Pairs production computed:          ",nbPairsprod
+   write(*,'(a,i0)') "  > Number of leptons generated:        ",nbLeptonsProd
    write(*,'(a,i8)') "  > Number of lepton events saved:      ",nbLeptonsSaved
    write(*,'(a,i8)') "  > Number of photon events saved:      ",nbPhotonsSaved
    write(*,*) "=================================================================="

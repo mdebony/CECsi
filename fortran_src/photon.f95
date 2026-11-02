@@ -311,7 +311,8 @@ subroutine make_pairs(photon_gamma, electron, positron)
       end if
    end do
 
-   nbLeptonsProd = nbLeptonsProd + positron%weight + electron%weight
+   !$OMP ATOMIC UPDATE
+   nbLeptonsProd = nbLeptonsProd + int(positron%weight + electron%weight, kind(NbLeptonsProd))
 
 end subroutine make_pairs
 

@@ -1,6 +1,7 @@
 !===============================================================================         
                            MODULE Constantes
 !===============================================================================         
+use, intrinsic :: iso_fortran_env, only: int64
 implicit none
 ! Precision
 integer, parameter :: prec=8
@@ -55,7 +56,7 @@ real(prec) :: currentRedshift, currentEnergy
 real(prec) :: xiComp=1., ComptonThreshold, ComptonEnergyThreshold
 integer :: NbErrors=0 ! number of errors due to Compton Acc. threshold too high
 integer :: NbCompton=0, NbPairsprod=0 
-integer :: NbPhotonsProd=0, NbLeptonsProd=0 
+integer(int64) :: NbPhotonsProd=0_int64, NbLeptonsProd=0_int64
 
 ! Files IDs
 integer, parameter :: ResultID=11 
