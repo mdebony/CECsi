@@ -478,6 +478,8 @@ subroutine genmu(ec,e,mu)
          xt=ran0()
       enddo
       mu=(1-x0/2/gama/e)/beta
+      ! Keep the computed cosine within its physical bounds.
+      mu=max(-1._prec,min(1._prec,mu))
    endif
 end subroutine genmu
 
