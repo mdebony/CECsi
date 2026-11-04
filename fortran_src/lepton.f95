@@ -21,7 +21,6 @@ subroutine Check_if_lepton_interact(lepton, Zfinal)
    real(prec), intent(out) ::  Zfinal
    real(prec) :: distToSource,zint,redzmax,redzmin, tauint, Zlim
    real(prec) :: tau=0, qgauss, ProbaInt, ProbaLim, ran0
-   real(prec) :: randomDraw
    real(prec) :: aa, bb, dtaudx, deltaZ, f, fprime, taulim
    real(prec) :: dtaudxPPCMB,dtaudxPPEBL,integrandTauCom,PCMB!,PEBL
    real(prec) :: integranddtaudxComCMB,integranddtaudxComEBL, qgauss1
@@ -93,9 +92,7 @@ subroutine Check_if_lepton_interact(lepton, Zfinal)
       tauint = 1
    end if 
 #else
-   ! Keep the random draw below 1 to avoid log(0).
-   randomDraw = min(ran0(),nearest(1._prec,-1._prec))
-   tauint = -log(1._prec-randomDraw)
+   tauint = -log(1._prec-ran0())
    if (tauLim < tauint ) then ! No interaction before reaching the limit
       willInteract = .FALSE.
    else
@@ -442,7 +439,7 @@ subroutine genmu(ec,e,mu)
       y=0
       xt=1
       do while (xt.gt.y) 
-         a1=min(ran0(),nearest(1._prec,-1._prec))
+         a1=ran0()
          mu=(1-sqrt((1-beta)**2+4*beta*(1-a1)))/beta
          if (abs(mu).gt.1) then
             write(6,*) 'error mu',a1,beta,mu

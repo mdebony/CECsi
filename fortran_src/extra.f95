@@ -12,12 +12,12 @@ function ran0()
   implicit none
   real(prec) :: ran0
   integer,parameter :: IA=16807,IM=2147483647,IQ=127773,IR=2836
-  real, save :: am
+  real(prec), save :: am
   integer, save :: ix=-1, iy=-1,k
   !$OMP THREADPRIVATE(am,ix,iy)
 
   if (iseed <= 0 .or. iy < 0) then
-     am = nearest(1.e0,-1.e0)/IM
+     am = nearest(1._prec/IM,-1._prec)
      iy = ior(ieor(888889999,abs(iseed)),1)
      ix = ieor(777755555,abs(iseed))
      iseed = abs(iseed)+1

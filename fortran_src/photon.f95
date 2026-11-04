@@ -17,7 +17,6 @@ subroutine Check_if_photon_interact(photon, Zfinal)
    real(prec), intent(out) :: Zfinal
    real(prec) :: distToSource,zint,redzmax,redzmin, comp, Zlim
    real(prec) :: Norma, tau, qgauss, ProbaInt, ProbaLim, ran0, pair_opacity_integral
-   real(prec) :: randomDraw
    real(prec) :: aa, bb, dtaudx, deltaZ,integranddtaudxPP
    real(prec) :: dtaudxPPCMB,dtaudxPPEBL,integrandTauPP,PCMB!,PEBL
    real(prec) :: integranddtaudxPPCMB,integranddtaudxPPEBL, qgauss1
@@ -78,9 +77,7 @@ subroutine Check_if_photon_interact(photon, Zfinal)
       comp = -1
    end if 
 #else
-   ! Keep the random draw below 1 to avoid log(0).
-   randomDraw = min(ran0(),nearest(1._prec,-1._prec))
-   comp = log(1._prec-randomDraw)
+   comp = log(1._prec-ran0())
    if ( tau < -comp ) then ! No interaction before reaching the limit
       willInteract = .FALSE.
    else
