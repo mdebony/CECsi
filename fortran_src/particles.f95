@@ -22,7 +22,7 @@ real(prec) :: zEarth=0.
 
 real(prec) :: charge
 logical :: duetoCMB, willInteract
-integer, parameter :: stacksizeini=10
+integer, parameter :: stacksizeini=32
 
 integer :: nbLeptonsSaved=0, nbPhotonsSaved=0
 
