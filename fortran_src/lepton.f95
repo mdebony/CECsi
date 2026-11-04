@@ -439,8 +439,8 @@ subroutine genmu(ec,e,mu)
       y=0
       xt=1
       do while (xt.gt.y) 
-         a1=ran0()
-         mu=(1-sqrt((1+beta)**2-4*beta*a1))/beta
+         a1=min(ran0(),nearest(1._prec,-1._prec))
+         mu=(1-sqrt((1-beta)**2+4*beta*(1-a1)))/beta
          if (abs(mu).gt.1) then
             write(6,*) 'error mu',a1,beta,mu
             mu=mu/abs(mu)
