@@ -615,9 +615,9 @@ function xsx(x)
    real(prec) :: x,xsx
    if (x.gt.0.5d0) then
     xsx=(1-4/x-8/x/x)*log(1+x)+0.5d0
-    xsx=xsx+8/x-1/2/(1+x)**2
+    xsx=xsx+8/x-0.5d0/(1+x)**2
    else
-     xsx=1/3+0.141d0*x-0.12d0*x*x+(1+0.5d0*x)/(1+x)**2
+     xsx=1.d0/3.d0+0.141d0*x-0.12d0*x*x+(1+0.5d0*x)/(1+x)**2
      xsx=xsx*x
    endif
 end function xsx
