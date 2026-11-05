@@ -193,7 +193,7 @@ subroutine rotate(u1,theta,u)
    implicit none
    real(prec), intent(in) :: theta
    real(prec), intent(inout) :: u(3)
-   real(prec), intent(out) :: u1(3)
+   real(prec), intent(inout) :: u1(3)
    real(prec) :: u2(3)
    real(prec) :: cx, cy, cz, dx, dy, dz, ex, ey, ez, cos_theta, sin_theta
 

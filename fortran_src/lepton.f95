@@ -286,11 +286,9 @@ subroutine Inverse_Compton_scattering(lepton,photon)
    alphaa=asin(sinalpha)
    lepton%dir=arrivingDir
    if ( alphaa .ne. 0 ) then
-      call rotate(sqrt(XiComp)*alphaa,vectPdt(1),vectPdt(2),vectPdt(3),&
-                     lepton%dir(1),lepton%dir(2),lepton%dir(3))
+      call rotate(lepton%dir,sqrt(XiComp)*alphaa,vectPdt)
       phi = ran0()*2*pi
-      call rotate(phi,arrivingDir(1),arrivingDir(2),arrivingDir(3),&
-                     lepton%dir(1),lepton%dir(2),lepton%dir(3))
+      call rotate(lepton%dir,phi,arrivingDir)
    end if
    !Compton accumulation on the energies
 #ifdef approx_Eic
