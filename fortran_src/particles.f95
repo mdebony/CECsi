@@ -138,6 +138,12 @@ subroutine store_particle(part,partstack,StackSize)
                endif
                i=i+1
             end do
+            ! If it's the highest energy particle add it at the start of the stack
+            if (.not. found) then
+               partStack(1)=part(n)
+               partStack(1)%weight=partStack(1)%weight/frac
+               found = .true.
+            end if
          end if
 #ifdef file_positrons
       else if (part(n)%charge == 1) then
