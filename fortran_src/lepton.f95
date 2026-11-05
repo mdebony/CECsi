@@ -603,7 +603,7 @@ function phix(x)
       if (x.lt.3.5d0) then 
          phix=(1+x)*log(1+x)-0.94d0*x-9.25d-3
       else 
-         phix=(1+x)*log(1+x)-0.5d0*x*log(2+0.076d0*x)+9.214d0
+         phix=(1+x)*log(1+x)-0.5d0*x-log(2+0.076d0*x)/0.076d0+9.214d0
       endif
    endif
 end function phix
