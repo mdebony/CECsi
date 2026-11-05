@@ -494,10 +494,12 @@ subroutine compton(u,v,w,e,ec,xi,dex,dey,dez)
    real(prec) :: mu0,vv2,fact, dex2,dey2,dez2
    real(prec) :: csphi,snphi,smud,t,csphismud,snphismud
    real(prec) :: ec
+   real(prec) :: oneMinusBeta,dopplerDenom
    
 !     common /mc2/mc2 
    gama=ec+1
    beta=sqrt(ec*(ec+2))/gama
+   oneMinusBeta=1._prec/(gama*gama*(1._prec+beta))
 
 !     direction du photon diffuse (par test de rejection)
    a1=1.
@@ -511,12 +513,10 @@ subroutine compton(u,v,w,e,ec,xi,dex,dey,dez)
       phi=2*pi*a2
       
       mu0=2*a1-1
-      !mud=min((beta+mu0)/(1+beta*mu0),1.)
-      !t=gama*(1.-mud*beta)
-      mud=1-(1-mu0)/(gama**2 *(1+beta)*(1+beta*mu0))
-      t=1/((1+beta)*gama)*(1+(1-mu0)*beta/(1+beta*mu0))
-!       min( added on 17/4/09 to avoid apparition of  NaN in some rare cases when comuting smud
-      smud=sqrt(1-mud**2)
+      dopplerDenom=(1._prec+mu0)-mu0*oneMinusBeta
+      mud=1._prec-(1._prec-mu0)*oneMinusBeta/dopplerDenom
+      t=1._prec/(gama*dopplerDenom)
+      smud=t*sqrt((1._prec-mu0)*(1._prec+mu0))
       
       csphi=cos(phi)
       snphi=sin(phi)
@@ -532,6 +532,7 @@ subroutine compton(u,v,w,e,ec,xi,dex,dey,dez)
       wd=mud*dez-snphismud*ro
       
       q=u*ud+v*vd+w*wd
+      q=max(-1._prec,min(1._prec,q))
       
       eps=e*(1-q)/(t)
       xdsxi=1/(1+eps)
