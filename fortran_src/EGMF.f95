@@ -155,7 +155,7 @@ function ran1(i,j,k) result(xrand)
    xrand = xrand + sqrt2 * seededran(seed)
 
    irand = int(xrand/10.*huge(1))
-   irand = modulo(irand,sizeEGMF)
+   irand = 1 + modulo(irand-1,sizeEGMF)
 
    ! Retrieve random value --------------------------------
    xrand = EGMFtab(irand)
@@ -181,7 +181,7 @@ function ran2(i,j,k) result(xrand)
    xrand = xrand + pi * seededran(seed)
 
    irand = int(xrand/50.*huge(1))
-   irand = modulo(irand,sizeEGMF)
+   irand = 1 + modulo(irand-1,sizeEGMF)
 
    ! Retrieve random value --------------------------------
    xrand = EGMFtab(irand)
