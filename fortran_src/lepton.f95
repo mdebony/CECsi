@@ -81,7 +81,6 @@ subroutine Check_if_lepton_interact(lepton, Zfinal)
    ! and we draw a probability of interaction for the lepton (P). if P < P0,
    ! we assume that the lepton will not interact, otherwise we compute the
    ! redshift of interaction.
-   currentEnergy = currentEnergy-1
    taulim = qgauss(integrandTauCom, Zlim, lepton%redshift)
    taulim = taulim * c/H0
 #ifdef approx_lambda_ic
@@ -175,7 +174,6 @@ subroutine Check_if_lepton_interact(lepton, Zfinal)
       end if
 #endif
    end if
-   currentEnergy = currentEnergy+1
 
 end subroutine Check_if_lepton_interact
 

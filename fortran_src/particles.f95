@@ -9,7 +9,7 @@ type particle
    integer :: charge    ! -1 = electron, 0 = part, 1 = positron
    real(prec) :: time
    real(prec) :: pos(3) ! position -> cartesian (x, y, z)
-   real(prec) :: energy
+   real(prec) :: energy ! Total E/(m_e*c**2); gamma for leptons.
    real(prec) :: dir(3) ! direction -> cartesian (u, v, w)
    real(prec) :: redshift, weight
    integer :: generation

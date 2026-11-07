@@ -294,14 +294,14 @@ subroutine make_pairs(photon_gamma, electron, positron)
          electron%dir(1) = uu(1)
          electron%dir(2) = vv(1)
          electron%dir(3) = ww(1)
-         electron%energy = hnu1-1 ! total energy -> -1 kinematic energy
+         electron%energy = hnu1 ! total energy in electron rest-energy units
          electron%weight = photon_gamma%weight
          electron%time   = photon_gamma%time
          electron%generation = photon_gamma%generation+1
          positron%dir(1) = uu(2)
          positron%dir(2) = vv(2)
          positron%dir(3) = ww(2)
-         positron%energy = hnu2-1
+         positron%energy = hnu2
          positron%weight = photon_gamma%weight
          positron%time   = photon_gamma%time
          positron%generation = photon_gamma%generation+1
