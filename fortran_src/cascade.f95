@@ -249,7 +249,7 @@ subroutine initiate()
    Ethreshold = Ethreshold*1.d9/(510998.918) ! adimensionnal
    Eth_lept = Eth_lept*1.d9/(510998.918) ! adimensionnal
    ! Compute the Compton accumulation energy threshold (only on the CMB)
-   ComptonEnergyThreshold = ComptonThreshold/((4./3.)*2.7*Tcmbp*(1+emission_redshift))
+   ComptonEnergyThreshold = ComptonThreshold/((4./3.)*2.7*Tcmbp*(1+emission_redshift)) - 2._prec
    write(*,'(a,f6.2,a,f4.2,a)') "  > Compton threshold ", Comptonthreshold*1d2,' % (',ComptonEnergyThreshold*510998.918d-12,' TeV)'
    write(*,'(a,f6.2,a)') "  > alphaS            ", alphaS
    !$ write(*,'(a,i4,a)') "  > On ", OMP_num_threads, " threads"
