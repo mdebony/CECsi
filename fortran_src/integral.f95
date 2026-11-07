@@ -370,7 +370,7 @@ real(prec) function integranddtaudxComCMB (y,reddz)
 #else
    x=2*gamma*w
    if (x<1.D-3) then
-      xx=sigmaT*(1-x+(13/10)*x**2-(133/80)*x**3+(143/70)*x**4)
+      xx=sigmaT*(1-x+(13.d0/10.d0)*x**2-(133.d0/80.d0)*x**3+(143.d0/70.d0)*x**4)
       integranddtaudxComCMB=n*xx*exp(y)
    else
       beta=sqrt(1-gamma**(-2))
@@ -412,7 +412,7 @@ real(prec) function integranddtaudxComEBL (y,reddz)
    w=eps/(m*c**2)
    x=2*gamma*w
    if (x<1.D-3) then
-      xx=sigmaT*(1-x+(13/10)*x**2-(133/80)*x**3+(143/70)*x**4)
+      xx=sigmaT*(1-x+(13.d0/10.d0)*x**2-(133.d0/80.d0)*x**3+(143.d0/70.d0)*x**4)
       integranddtaudxComEBL=n*xx*exp(y)
    else
       beta=sqrt(1-gamma**(-2))
