@@ -580,11 +580,7 @@ function yu(e1,e)
 
    g=e1+1
    b=sqrt(e1*(e1+2))/g
-   if (g.gt.1d2) then
-      umb=1/2/g**2
-   else
-      umb=1-b
-   endif
+   umb=1.d0/(g*g*(1+b))
    xx=2*e*g
    xxp=xx*(1+b)
    xxm=xx*umb
