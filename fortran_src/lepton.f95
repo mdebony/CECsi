@@ -225,7 +225,7 @@ subroutine MoveLepton0(lepton, zfinal)
    theta = real(lepton%charge)*wLarmor*eta
    sin_theta = sin(theta)
    sin2_theta2 = sin(theta/2)**2
-   if (theta <1d-50) then
+   if (abs(theta) <1d-50) then
       sinc_theta = 1
    else
       sinc_theta = sin(theta)/theta
