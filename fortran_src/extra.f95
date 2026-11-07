@@ -13,7 +13,8 @@ function ran0()
   real(prec) :: ran0
   integer,parameter :: IA=16807,IM=2147483647,IQ=127773,IR=2836
   real(prec), save :: am
-  integer, save :: ix=-1, iy=-1,k
+  integer, save :: ix=-1, iy=-1
+  integer :: k
   !$OMP THREADPRIVATE(am,ix,iy)
 
   if (iseed <= 0 .or. iy < 0) then
@@ -147,7 +148,7 @@ subroutine genx(ee,emin,zint)
    implicit none
    real(prec), intent(in):: zint, emin
    real(prec), intent(out):: ee
-   real(prec):: x=0,x0,ran0,a1,g
+   real(prec):: x,x0,ran0,a1,g
    real(prec):: dx1,dx00,b,dx0
    real(prec):: ktr,xt,yt,deps
 

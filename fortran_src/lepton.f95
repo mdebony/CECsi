@@ -20,7 +20,7 @@ subroutine Check_if_lepton_interact(lepton, Zfinal)
    type (particle) :: lepton_modify
    real(prec), intent(out) ::  Zfinal
    real(prec) :: distToSource,zint,redzmax,redzmin, tauint, Zlim
-   real(prec) :: tau=0, qgauss, ProbaInt, ProbaLim, ran0
+   real(prec) :: tau, qgauss, ProbaInt, ProbaLim, ran0
    real(prec) :: aa, bb, dtaudx, deltaZ, f, fprime, taulim
    real(prec) :: dtaudxPPCMB,dtaudxPPEBL,integrandTauCom,PCMB!,PEBL
    real(prec) :: integranddtaudxComCMB,integranddtaudxComEBL, qgauss1
